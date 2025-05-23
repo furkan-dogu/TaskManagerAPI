@@ -140,7 +140,11 @@ const logoutUser = (req, res) => {
         #swagger.tags = ["Authentication"]
         #swagger.summary = "Logout"
     */
-    res.status(200).json({ message: "Logged out successfully" });
+    try {
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
 };
 
 const getUserProfile = async (req, res) => {
