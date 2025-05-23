@@ -1,6 +1,6 @@
 "use strict"
 
-const HOST = "http://127.0.0.1:8000"
+const HOST = "https://task-manager-api-virid.vercel.app"
 
 const swaggerAutogen = require('swagger-autogen')()
 const packageJson = require('./package.json')

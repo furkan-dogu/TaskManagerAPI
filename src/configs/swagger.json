@@ -13,7 +13,7 @@
       "name": "ISC"
     }
   },
-  "host": "http://127.0.0.1:8000",
+  "host": "https://task-manager-api-virid.vercel.app",
   "basePath": "/",
   "schemes": [
     "https"
