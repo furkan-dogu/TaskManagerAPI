@@ -4,6 +4,27 @@ const Task = require("../models/task");
 const User = require("../models/user");
 const excelJS = require("exceljs");
 
+const translateStatus = (status) => {
+  return status === "Pending"
+    ? "Beklemede"
+    : status === "In Progress"
+    ? "Devam Ediyor"
+    : status === "Completed"
+    ? "Tamamlandı"
+    : status;
+};
+
+const translatePriority = (priority) => {
+  return priority === "Low"
+    ? "Düşük"
+    : priority === "Medium"
+    ? "Orta"
+    : priority === "High"
+    ? "Yüksek"
+    : priority;
+};
+
+
 const exportTasksReport = async (req, res) => {
     /*
         #swagger.tags = ["Reports"]
@@ -17,13 +38,13 @@ const exportTasksReport = async (req, res) => {
         const worksheet = workbook.addWorksheet("Tasks Report");
 
         worksheet.columns = [
-            { header: "Task ID", key: "_id", width: 25 },
-            { header: "Title", key: "title", width: 30 },
-            { header: "Description", key: "description", width: 50 },
-            { header: "Priority", key: "priority", width: 15 },
-            { header: "Status", key: "status", width: 20 },
-            { header: "Due Date", key: "dueDate", width: 20 },
-            { header: "Assigned To", key: "assignedTo", width: 30 },
+            { header: "Görev ID", key: "_id", width: 25 },
+            { header: "Başlık", key: "title", width: 30 },
+            { header: "Açıklama", key: "description", width: 50 },
+            { header: "Öncelik", key: "priority", width: 15 },
+            { header: "Durum", key: "status", width: 20 },
+            { header: "Teslim Tarihi", key: "dueDate", width: 20 },
+            { header: "Atanan Kişi(ler)", key: "assignedTo", width: 30 },
         ];
 
         tasks.forEach((task) => {
@@ -34,10 +55,10 @@ const exportTasksReport = async (req, res) => {
                 _id: task._id,
                 title: task.title,
                 description: task.description,
-                priority: task.priority,
-                status: task.status,
-                dueDate: task.dueDate.toISOString().split("T")[0],
-                assignedTo: assignedTo || "Unassigned",
+                priority: translatePriority(task.priority),
+                status: translateStatus(task.status),
+                dueDate: new Date(task.dueDate).toLocaleDateString("tr-TR"),
+                assignedTo: assignedTo || "Atanmamış",
             });
         });
 
@@ -101,13 +122,14 @@ const exportUsersReport = async (req, res) => {
         const worksheet = workbook.addWorksheet("User Task Report");
 
         worksheet.columns = [
-            { header: "User Name", key: "name", width: 30 },
-            { header: "Email", key: "email", width: 40 },
-            { header: "Total Assigned Tasks", key: "taskCount", width: 20 },
-            { header: "Pending Tasks", key: "pendingTasks", width: 20 },
-            { header: "In Progress Tasks", key: "inProgressTasks", width: 20 },
-            { header: "Completed Tasks", key: "completedTasks", width: 20 },
+            { header: "Kullanıcı Adı", key: "name", width: 30 },
+            { header: "E-posta", key: "email", width: 40 },
+            { header: "Toplam Görev", key: "taskCount", width: 20 },
+            { header: "Bekleyen Görevler", key: "pendingTasks", width: 20 },
+            { header: "Devam Eden Görevler", key: "inProgressTasks", width: 20 },
+            { header: "Tamamlanan Görevler", key: "completedTasks", width: 20 },
         ];
+
 
         Object.values(userTaskMap).forEach(user => {
             worksheet.addRow(user);
