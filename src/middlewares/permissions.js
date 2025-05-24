@@ -13,16 +13,16 @@ const protect = async (req, res, next) => {
             const user = await User.findById(decoded.id).select("-password");
 
             if (!user || !user.isActive) {
-                return res.status(403).json({ message: "User is inactive or not found" });
+                return res.status(403).json({ message: "Kullanıcı devre dışı veya bulunamadı" });
             }
 
             req.user = user;
             next();
         } else {
-            res.status(401).json({ message: "Not authorized, no token" });
+            res.status(401).json({ message: "Yetkili değil, token yok" });
         }
     } catch (error) {
-        res.status(401).json({ message: "Token failed", error: error.message });
+        res.status(401).json({ message: "Token başarısız", error: error.message });
     }
 };
 
@@ -31,7 +31,7 @@ const adminOnly = (req, res, next) => {
     if (req.user && req.user.isActive && req.user.role === "admin") {
         next();
     } else {
-        res.status(403).json({ message: "Access denied, admin only" });
+        res.status(403).json({ message: "Erişim reddedildi, yalnızca admin" });
     }
 };
 

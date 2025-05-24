@@ -27,7 +27,7 @@ const getUsers = async (req, res) => {
 
         res.json(usersWithTaskCounts);
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 }
 
@@ -39,10 +39,10 @@ const getUsersById = async (req, res) => {
     */
     try {
         const user = await User.findById(req.params.id).select("-password");
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 }
 
@@ -54,13 +54,13 @@ const deleteUser = async (req, res) => {
     */
     try {
         const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
 
         await user.deleteOne();
 
-        res.json({ message: "User deleted successfully" });
+        res.json({ message: "Kullanıcı başarıyla silindi" });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -83,7 +83,7 @@ const updateUserByAdmin = async (req, res) => {
     */
     try {
         const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
 
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
@@ -116,7 +116,7 @@ const updateUserByAdmin = async (req, res) => {
         const updated = await user.save();
 
         res.json({
-            message: "User updated by admin",
+            message: "Kullanıcı admin tarafından güncellendi",
             user: {
                 _id: updated._id,
                 name: updated.name,
@@ -127,7 +127,7 @@ const updateUserByAdmin = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 

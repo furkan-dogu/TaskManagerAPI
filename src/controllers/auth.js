@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
 
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: "User already exists" });
+            return res.status(400).json({ message: "Kullanıcı zaten mevcut" });
         }
 
         let profileImageUrl = null;
@@ -84,7 +84,7 @@ const registerUser = async (req, res) => {
             isActive: user.isActive
         });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -108,17 +108,17 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(401).json({ message: "Invalid email or password" });
+            return res.status(401).json({ message: "Geçersiz e-posta veya şifre" });
         }
 
         if (!user.isActive) {
-            return res.status(403).json({ message: "Your account is deactivated. Please contact support." });
+            return res.status(403).json({ message: "Hesabınız devre dışı bırakıldı. Lütfen destek ile iletişime geçin." });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(401).json({ message: "Invalid email or password" });
+            return res.status(401).json({ message: "Geçersiz e-posta veya şifre" });
         }
 
         res.json({
@@ -131,7 +131,7 @@ const loginUser = async (req, res) => {
             isActive: user.isActive
         })
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -141,9 +141,9 @@ const logoutUser = (req, res) => {
         #swagger.summary = "Logout"
     */
     try {
-        res.status(200).json({ message: "Logged out successfully" });
+        res.status(200).json({ message: "Başarıyla çıkış yapıldı" });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -156,12 +156,12 @@ const getUserProfile = async (req, res) => {
         const user = await User.findById(req.user.id).select("-password");
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "Kullanıcı bulunamadı" });
         }
 
         res.json(user);
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -189,7 +189,7 @@ const updateUserProfile = async (req, res) => {
         }
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "Kullanıcı bulunamadı" });
         }
 
         user.name = req.body.name || user.name;
@@ -230,7 +230,7 @@ const updateUserProfile = async (req, res) => {
             isActive: updatedUser.isActive
         });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 

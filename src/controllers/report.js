@@ -54,7 +54,7 @@ const exportTasksReport = async (req, res) => {
             res.end();
         })
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 }
 
@@ -126,7 +126,7 @@ const exportUsersReport = async (req, res) => {
             res.end();
         })
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 }
 

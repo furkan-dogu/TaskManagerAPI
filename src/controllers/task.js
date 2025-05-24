@@ -61,7 +61,7 @@ const getTasks = async (req, res) => {
             },
         })
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -74,11 +74,11 @@ const getTasksById = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id).populate("assignedTo", "name email profileImageUrl");
 
-        if (!task) return res.status(404).json({ message: "Task not found" });
+        if (!task) return res.status(404).json({ message: "Görev bulunamadı" });
 
         res.json(task);
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -115,7 +115,7 @@ const createTask = async (req, res) => {
         } = req.body;
 
         if (!Array.isArray(assignedTo)) {
-            return res.status(400).json({ message: "assignedTo must be an array of user IDs" });
+            return res.status(400).json({ message: "assignedTo kullanıcı id'lerinden oluşan bir array olmalıdır" });
         }
 
         const task = await Task.create({
@@ -129,9 +129,9 @@ const createTask = async (req, res) => {
             todoChecklist,
         })
 
-        res.status(201).json({ message: "Task created successfully", task });
+        res.status(201).json({ message: "Görev başarıyla oluşturuldu", task });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -159,7 +159,7 @@ const updateTask = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
 
-        if (!task) return res.status(404).json({ message: "Task not found" });
+        if (!task) return res.status(404).json({ message: "Görev bulunamadı" });
 
         task.title = req.body.title || task.title;
         task.description = req.body.description || task.description;
@@ -170,15 +170,15 @@ const updateTask = async (req, res) => {
 
         if (req.body.assignedTo) {
             if (!Array.isArray(req.body.assignedTo)) {
-                return res.status(400).json({ message: "assignedTo must be a single user IDs" });
+                return res.status(400).json({ message: "assignedTo kullanıcı id'lerinden oluşan bir array olmalıdır" });
             }
             task.assignedTo = req.body.assignedTo;
 
             const updatedTask = await task.save();
-            res.json({ message: "Task updated successfully", updatedTask });
+            res.json({ message: "Görev başarıyla güncellendi", updatedTask });
         }
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -191,12 +191,12 @@ const deleteTask = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
 
-        if (!task) return res.status(404).json({ message: "Task not found" });
+        if (!task) return res.status(404).json({ message: "Görev bulunamadı" });
 
         await task.deleteOne();
-        res.json({ message: "Task deleted successfully" });
+        res.json({ message: "Görev başarıyla silindi" });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -215,12 +215,12 @@ const updateTaskStatus = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
 
-        if (!task) return res.status(404).json({ message: "Task not found" });
+        if (!task) return res.status(404).json({ message: "Görev bulunamadı" });
 
         const isAssigned = task.assignedTo.some((userId) => userId.toString() === req.user._id.toString());
 
         if (!isAssigned && req.user.role !== "admin") {
-            return res.status(403).json({ message: "Not authorized" });
+            return res.status(403).json({ message: "Yetkiniz yok" });
         }
 
         task.status = req.body.status || task.status;
@@ -231,9 +231,9 @@ const updateTaskStatus = async (req, res) => {
         }
 
         await task.save();
-        res.json({ message: "Task status updated", task });
+        res.json({ message: "Görev durumu güncellendi", task });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -256,10 +256,10 @@ const updateTaskChecklist = async (req, res) => {
         const { todoChecklist } = req.body;
         const task = await Task.findById(req.params.id);
 
-        if (!task) return res.status(404).json({ message: "Task not found" });
+        if (!task) return res.status(404).json({ message: "Görev bulunamadı" });
 
         if(!task.assignedTo.includes(req.user._id) && req.user.role !== "admin") {
-            return res.status(403).json({ message: "Not authorized to update checklist" });
+            return res.status(403).json({ message: "Kontrol listesini güncelleme yetkisi yok" });
         }
 
         task.todoChecklist = todoChecklist;
@@ -279,9 +279,9 @@ const updateTaskChecklist = async (req, res) => {
         await task.save();
         const updatedTask = await Task.findById(req.params.id).populate("assignedTo", "name email profileImageUrl");
 
-        res.json({ message: "Task checklist updated", task: updatedTask });
+        res.json({ message: "Görev kontrol listesi güncellendi", task: updatedTask });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -346,7 +346,7 @@ const getDashboardData = async (req, res) => {
             recentTasks
         })
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
@@ -416,7 +416,7 @@ const getUserDashboardData = async (req, res) => {
             recentTasks
         })
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Sunucu hatası", error: error.message });
     }
 };
 
