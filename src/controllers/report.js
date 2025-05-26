@@ -98,6 +98,7 @@ const exportUsersReport = async (req, res) => {
                 pendingTasks: 0,
                 inProgressTasks: 0,
                 completedTasks: 0,
+                isActive: user.isActive ? "Aktif" : "Banlanmış"
             };
         })
 
@@ -128,6 +129,7 @@ const exportUsersReport = async (req, res) => {
             { header: "Bekleyen Görevler", key: "pendingTasks", width: 20 },
             { header: "Devam Eden Görevler", key: "inProgressTasks", width: 20 },
             { header: "Tamamlanan Görevler", key: "completedTasks", width: 20 },
+            { header: "Kullanıcı Durumu", key: "isActive", width: 20 }
         ];
 
 
