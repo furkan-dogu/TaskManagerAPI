@@ -86,7 +86,7 @@ const exportUsersReport = async (req, res) => {
         #swagger.description = "Generates an Excel report showing each user’s total task count and task distribution by status (Pending, In Progress, Completed)."
     */
     try {
-        const users = await User.find().select("name email _id").lean();
+        const users = await User.find().select("name email _id isActive").lean();
         const userTasks = await Task.find().populate("assignedTo", "name email _id");
 
         const userTaskMap = {}
