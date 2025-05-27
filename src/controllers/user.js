@@ -98,6 +98,10 @@ const updateUserByAdmin = async (req, res) => {
             user.password = await bcrypt.hash(req.body.password, salt);
         }
 
+        if (req.body.profileImageUrl === "null") {
+            user.profileImageUrl = null;
+        }
+
         if (req.file) {
             const uploadFromBuffer = (fileBuffer) => {
                 return new Promise((resolve, reject) => {
