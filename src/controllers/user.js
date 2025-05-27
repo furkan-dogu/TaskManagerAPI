@@ -2,6 +2,9 @@
 
 const Task = require("../models/task");
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
+const cloudinary = require("../configs/cloudinary");
+const streamifier = require("streamifier");
 
 const getUsers = async (req, res) => {
     /*
